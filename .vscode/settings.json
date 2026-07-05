@@ -1,0 +1,10 @@
+{
+    "rust-analyzer.linkedProjects": [
+        "Cargo.toml",
+        "crates/calico-cli/Cargo.toml",
+        "crates/calico-macros/Cargo.toml",
+        "crates/calico-elf/Cargo.toml",
+        "crates/calico-rpc/Cargo.toml",
+        // "examples/stm32f401re/Cargo.toml"
+    ]
+}

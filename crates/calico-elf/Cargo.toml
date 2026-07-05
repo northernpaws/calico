@@ -1,0 +1,14 @@
+[package]
+name = "calico-elf"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+object = { version = "0.39.1" }
+serde_json = { version = "1.0.150" }
+serde = { version = "1.0.228", features = ["derive"] }
+calico-rpc = { path = "../calico-rpc" }
+
+[features]
+default = []
+std = ["calico-rpc/std"]

@@ -1,0 +1,63 @@
+[package]
+name = "calico"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "calico"
+path = "src/bin/calico"
+
+[features]
+default = ["harness", "metadata"]
+std = [
+    "elf",
+
+    # Enable std crate usage for postcard is std usage was requested.
+    "calico-rpc/std",
+    "calico-elf/std",
+]
+
+# Enables reading and writing metadata to ELF files related to tests.
+#
+# Typically only called from std capable environments.
+elf = ["dep:calico-elf", "rpc"]
+
+rpc = ["dep:calico-rpc"]
+
+# ====================
+# Testing Harness
+
+harness = ["macros"]
+macros = ["dep:calico-macros"]
+
+# Enables printing debug/progress logs using one of the
+# logging frameworks below running on the target.
+defmt = ["dep:defmt"]
+log = ["dep:log"]
+
+# Enables tests to emit `tracing` spans and events to the runner.
+tracing = ["dep:tracing", "calico-macros/tracing"]
+
+# Enables allowing the build to spit out
+# external metadata associated with a
+# test, such as a human-friendly label and
+# description.
+metadata = ["calico-macros/metadata"]
+serde = ["dep:serde", "calico-rpc/serde"]
+
+[dependencies]
+calico-macros = { path = "crates/calico-macros/", optional = true }
+calico-rpc = { path = "crates/calico-rpc/", optional = true }
+calico-elf = { path = "crates/calico-elf/", optional = true }
+
+defmt = { version = "1.0.1", optional = true }
+log = { version = "0.4.14", optional = true }
+tracing = { version = "0.1.44", default-features = false, optional = true }
+
+object = { version = "0.39.1", optional = true }                        # deals with ELF files
+serde_json = { version = "1.0.150", optional = true }                   # deals with ELF files
+serde = { version = "1.0.228", optional = true, features = ["derive"] }
+
+postcard = { version = "1.1.3", optional = true }
+postcard-rpc = { version = "0.12.0", optional = true }
+postcard-schema = { version = "0.2.5", optional = true, features = ["derive"] }

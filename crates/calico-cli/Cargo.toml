@@ -1,0 +1,31 @@
+[package]
+name = "calcio-cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anstyle = "^1.0"
+clap = { version = "^4.0", default-features = false, features = [
+    "std",
+    "color",
+    "help",
+    "usage",
+    "unicode",
+    "wrap_help",
+    "cargo",
+    "derive",
+    "suggestions",
+] }
+env_logger = "^0.11"
+log = "^0.4"
+color-eyre = "^0.6"
+owo-colors = "^4.2"
+calico = { path = "../../", features = ["std", "rpc", "elf"] }
+tokio = { version = "1", features = ["full"] }
+object = "0.39.1"
+tracing = "0.1.44"
+bmputil = { git = "https://codeberg.org/blackmagic-debug/bmputil.git", branch = "main" }
+serialport = "4.9.0"
+toml = "1.1.2"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.150"
