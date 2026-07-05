@@ -76,10 +76,12 @@ dependencies = [
 name = "calico-macros"
 version = "0.1.0"
 dependencies = [
+ "calico-elf",
  "darling",
  "proc-macro-error2",
  "proc-macro2",
  "quote",
+ "serde_json",
  "syn",
 ]
 

@@ -8,11 +8,11 @@ use calico_rpc::runner::{Test, TestOutcome};
 /// Defines the structure of a test defined in the Calico ELF table.
 #[derive(serde::Serialize, serde::Deserialize)] 
 pub struct TestDefinition {
-    disambiguator: u64,
-    name: String,
-    ignored: bool,
-    should_panic: bool,
-    timeout: Option<u32>,
+    pub disambiguator: u64,
+    pub name: String,
+    pub ignored: bool,
+    pub should_panic: bool,
+    pub timeout: Option<u32>,
 }
 
 impl From<TestDefinition> for Test {

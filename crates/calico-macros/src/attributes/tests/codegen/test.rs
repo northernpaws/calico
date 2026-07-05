@@ -1,5 +1,6 @@
 use std::hash::{DefaultHasher, Hash, Hasher};
 
+use calico_elf::TestDefinition;
 use proc_macro2::{Span, TokenStream};
 use quote::{format_ident, quote};
 use syn::Ident;
@@ -52,20 +53,16 @@ pub(crate) fn export_test_sym(
     // Generate a name used for the symbol variable.
     let ident_var = format_ident!("__{}_SYM", test_name.to_string().to_uppercase());
 
-    // Generate a symbol name which is actually a JSON object
-    // describing the test so the runner can parse it.
-    let sym_name = format!(
-        r#"{{"disambiguator":{},"name":"{}","ignored":{},"should_panic":{}{}}}"#,
-        _crate_local_disambiguator(), // disambiguator is needed to allow multiple identical test in different modules
-        _json_escape(&test_name.to_string()),
-        if ignore { "true" } else { "false" },
-        if should_panic { "true" } else { "false" },
-        if let Some(timeout) = timeout {
-            format!(",\"timeout\":{timeout}")
-        } else {
-            String::new()
-        }
-    );
+    // Encode the test definition to JSON so it can be
+    // embedded as the symbol name in the ELF symbol tree.
+    let sym_name = serde_json::to_string(&TestDefinition {
+        disambiguator: _crate_local_disambiguator(),
+        name: test_name.to_string(),
+        ignored: ignore,
+        should_panic,
+        timeout,
+    })
+    .expect("failed to convert test definition to JSON");
 
     // Unfortunately the module path can not be extracted from the Span yet.
     // At least on stable rust. Tracking issue: https://github.com/rust-lang/rust/issues/54725
