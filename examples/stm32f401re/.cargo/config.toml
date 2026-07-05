@@ -1,4 +1,5 @@
 [target.'cfg(all(target_arch = "arm", target_os = "none"))']
+# nightly is used because otherwise we can't envoke -C to change working dir.
 runner = "cargo +nightly -Z unstable-options -C ../../crates/calico-cli run run"
 
 [build]
