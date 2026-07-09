@@ -55,8 +55,20 @@ impl ValidatedModule {
 
         m
     }
+
+    pub(crate) fn init_function_for_test(&self, test: &TestFunc) -> Option<&InitFunc> {
+        if let Some(custom_init) = test.custom_init.as_ref() {
+            return Some(self.init_funcs.get(&custom_init.to_string()).unwrap());
+        }
+
+        self.default_init
+            .as_ref()
+            .map(|i| self.init_funcs.get(i.as_str()).unwrap())
+    }
 }
 
+/// Loops through all the functions defined in a test
+/// module and categorizes them based on their attributes.
 fn categorize_functions(
     functions: Vec<ModuleFn>,
 ) -> (Option<InitFunc>, Vec<TestFunc>, Vec<OtherFunc>) {

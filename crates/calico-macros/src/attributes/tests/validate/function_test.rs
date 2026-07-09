@@ -4,6 +4,7 @@ use syn::{Attribute, Item, ItemFn, Type};
 use crate::attributes::tests::parse::{ModuleFn, ModuleFnAttribute};
 
 /// A validated test function in a module.
+#[derive(Clone)]
 pub(crate) struct TestFunc {
     /// The source function.
     ///

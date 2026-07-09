@@ -5,23 +5,74 @@ use proc_macro2::{Span, TokenStream};
 use quote::{format_ident, quote};
 use syn::Ident;
 
-use crate::attributes::tests::validate::{TestFunc, ValidatedModule};
+use crate::attributes::tests::{
+    codegen::call_test_fn,
+    validate::{TestFunc, ValidatedModule},
+};
 
 /// Takes in a parsed test function and it's module, and returns a token
 /// stream that contains the test function, the ELF symbols for informing
 /// the runner of the test, injection points for test running, etc.
 pub(crate) fn test(test: &TestFunc, module: &ValidatedModule) -> TokenStream {
-    let test_func = &test.func;
-
+    // Generate an indentifier for the entrypoint of the test.
     let ident = &test.func.sig.ident;
     let ident_entrypoint = format_ident!("__{}_entrypoint", ident);
 
     // Generate a static symbol exported to the ELF that
     // describes the test and can be parsed by the runner.
-    let sym = export_test_sym(test, ident_entrypoint, module.args.default_timeout);
+    let sym = export_test_sym(&test, &ident_entrypoint, module.args.default_timeout);
+
+    // Extract the cfg attributes tied to the test fn.
+    //
+    // This ensures that if a test fn is configured out by
+    // the compiler, so are the derrived functions for it.
+    let cfgs = &test.cfgs;
+
+    // Extract the test function definition.
+    let mut test_func = test.func.clone();
+
+    // Retrieve the init function, if any, to use for this test.
+    //
+    // This function will be called at the start of the test to
+    // configure common things used across tests without repeating
+    // the init code across multiple tests.
+    let init_fn = module.init_function_for_test(test);
+
+    // Generate a function that calls the test's init method, and
+    // then the test, and checks the outcome of the test.
+    let mut test_invoke_fn = call_test_fn(test, init_fn);
+
+    // Inject the test start marker.
+    // test_func.block.stmts.insert(
+    //     0,
+    //     syn::parse_quote! {
+    //         calico::harness::test::test_start();
+    //     },
+    // );
+
+    // // Inject the test end marker.
+    // test_func.block.stmts.insert(
+    //     test_func.block.stmts.len() - 1,
+    //     syn::parse_quote! {
+    //         calico::harness::test::test_end();
+    //     },
+    // );
+
+    // Now generate an entrypoint function that will be called by the test runner.
+    // This function has the signature () -> !, so it will never return.
+    // Instead, it will signal the test result via semihosting exit/abort instead
+    let test_entrypoint = quote!(
+        #[doc(hidden)]
+        #(#cfgs)*
+        fn #ident_entrypoint() -> ! {
+           #test_invoke_fn
+        }
+    );
 
     quote! {
         #test_func
+
+        #test_entrypoint
 
         #sym
     }
@@ -35,7 +86,7 @@ pub(crate) fn test(test: &TestFunc, module: &ValidatedModule) -> TokenStream {
 /// runner both for flashing, and for extracting the embeded tests.
 pub(crate) fn export_test_sym(
     test: &TestFunc,
-    ident_entrypoint: Ident,
+    ident_entrypoint: &Ident,
     default_timeout: Option<u32>,
 ) -> proc_macro2::TokenStream {
     // Get the #[cfg(...)] statements that where on the test function.

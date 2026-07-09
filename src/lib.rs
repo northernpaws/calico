@@ -4,7 +4,7 @@
 // at the top level to avoid unnecessarily
 // verbose paths for imports in tests.
 #[cfg(all(feature = "harness", not(feature = "std")))]
-mod harness {
+pub mod harness {
     pub use calico_harness::*;
 }
 

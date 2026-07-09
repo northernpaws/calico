@@ -1,5 +1,6 @@
 [workspace]
 members = ["crates/*"]
+exclude = ["examples/stm32f401re"]
 
 [package]
 name = "calico"

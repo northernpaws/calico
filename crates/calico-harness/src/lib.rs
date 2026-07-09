@@ -17,6 +17,8 @@ pub mod tracing;
 ///
 /// This also contains the implicit entrypoints used to
 /// set up and start the test harness.
+///
+/// WARNING: This API is not stable and may change at any time.
 #[doc(hidden)]
 pub mod export;
 
