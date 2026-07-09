@@ -126,8 +126,8 @@ checksum = "8ae3f5d315924270530207e2a68396c3cc547f6dca3fbdca317cfb1a51edb593"
 name = "calico"
 version = "0.1.0"
 dependencies = [
+ "calico-harness",
  "calico-macros",
- "defmt 1.1.0",
 ]
 
 [[package]]
@@ -138,6 +138,13 @@ dependencies = [
  "object",
  "serde",
  "serde_json",
+]
+
+[[package]]
+name = "calico-harness"
+version = "0.1.0"
+dependencies = [
+ "defmt 1.1.0",
 ]
 
 [[package]]

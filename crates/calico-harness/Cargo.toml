@@ -1,0 +1,29 @@
+[package]
+name = "calico-harness"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+defmt = { version = "1.0.1", optional = true }
+log = { version = "0.4.14", optional = true }
+tracing = { version = "0.1.44", default-features = false, optional = true }
+
+[features]
+default = ["panic-handler"]
+
+# Defines a default panic-handler.
+#
+# This aliviates the "missing DefaultHandler" error
+# you'll get with cortex-m-rt and allows Calico to
+# perform panic handling.
+#
+# Disable if using `panic_probe`.
+panic-handler = []
+
+# Enables printing debug/progress logs using one of the
+# logging frameworks below running on the target.
+defmt = ["dep:defmt"]
+log = ["dep:log"]
+
+# Enables tests to emit `tracing` spans and events to the runner.
+tracing = ["dep:tracing"]

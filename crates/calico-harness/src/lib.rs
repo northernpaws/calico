@@ -1,5 +1,10 @@
+#![no_std]
+
 //! Provides the methods for initializing
 //! and instrumenting Calico tests.
+
+// This must go FIRST so that all the other modules see its macros.
+mod log;
 
 /// Provides test-specific instrumentation.
 pub mod test;

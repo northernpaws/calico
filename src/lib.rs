@@ -1,15 +1,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
-// This must go FIRST so that all the other modules see its macros.
-mod log;
-
 // If instrumentation is enabled, we re-export
 // at the top level to avoid unnecessarily
 // verbose paths for imports in tests.
 #[cfg(all(feature = "harness", not(feature = "std")))]
-mod harness;
-#[cfg(all(feature = "harness", not(feature = "std")))]
-pub use harness::*;
+mod harness {
+    pub use calico_harness::*;
+}
 
 /// Shadows the macros crate to make paths cleaner.
 #[cfg(feature = "macros")]

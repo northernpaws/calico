@@ -9,6 +9,10 @@ path = "src/bin/calico"
 
 [features]
 default = ["harness", "metadata"]
+
+# ====================
+# Standard Library supports
+
 std = [
     "elf",
 
@@ -17,6 +21,8 @@ std = [
     "calico-elf/std",
 ]
 
+# ====================
+# Host tooling
 
 # Enables reading and writing metadata to ELF files related to tests.
 #
@@ -28,7 +34,12 @@ rpc = ["dep:calico-rpc"]
 # ====================
 # Testing Harness
 
-harness = ["macros", "panic-handler"]
+harness = ["dep:calico-harness", "macros"]
+
+# Enables printing debug/progress logs using one of the
+# logging frameworks below running on the target.
+defmt = ["calico-harness/defmt"]
+log = ["calico-harness/log"]
 
 # Defines a default panic-handler.
 #
@@ -37,17 +48,13 @@ harness = ["macros", "panic-handler"]
 # perform panic handling.
 #
 # Disable if using `panic_probe`.
-panic-handler = []
+panic-handler = ["calico-harness/panic-handler"]
+
+
+# ====================
+# Macros
 
 macros = ["dep:calico-macros"]
-
-# Enables printing debug/progress logs using one of the
-# logging frameworks below running on the target.
-defmt = ["dep:defmt"]
-log = ["dep:log"]
-
-# Enables tests to emit `tracing` spans and events to the runner.
-tracing = ["dep:tracing", "calico-macros/tracing"]
 
 # Enables allowing the build to spit out
 # external metadata associated with a
@@ -56,14 +63,22 @@ tracing = ["dep:tracing", "calico-macros/tracing"]
 metadata = ["calico-macros/metadata"]
 serde = ["dep:serde", "calico-rpc/serde"]
 
+# ====================
+# Other framework support
+
+# Enables tests to emit `tracing` spans and events to the runner.
+tracing = [
+    # Enables tracing calls in the harness.
+    "calico-harness/tracing",
+    # Tells the macros to inject some tracing code.
+    "calico-macros/tracing",
+]
+
 [dependencies]
 calico-macros = { path = "crates/calico-macros/", optional = true }
 calico-rpc = { path = "crates/calico-rpc/", optional = true }
 calico-elf = { path = "crates/calico-elf/", optional = true }
-
-defmt = { version = "1.0.1", optional = true }
-log = { version = "0.4.14", optional = true }
-tracing = { version = "0.1.44", default-features = false, optional = true }
+calico-harness = { path = "crates/calico-harness/", optional = true }
 
 object = { version = "0.39.1", optional = true }                        # deals with ELF files
 serde_json = { version = "1.0.150", optional = true }                   # deals with ELF files
