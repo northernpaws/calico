@@ -6,9 +6,9 @@ mod log;
 // If instrumentation is enabled, we re-export
 // at the top level to avoid unnecessarily
 // verbose paths for imports in tests.
-#[cfg(feature = "harness")]
+#[cfg(all(feature = "harness", not(feature = "std")))]
 mod harness;
-#[cfg(feature = "harness")]
+#[cfg(all(feature = "harness", not(feature = "std")))]
 pub use harness::*;
 
 /// Shadows the macros crate to make paths cleaner.
@@ -28,7 +28,3 @@ pub mod elf {
 pub mod rpc {
     pub use calico_rpc::*;
 }
-
-/// Exports ELF symbols used by the Calico test runner.
-#[doc(hidden)]
-pub mod export;

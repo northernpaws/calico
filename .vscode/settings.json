@@ -5,6 +5,7 @@
         "crates/calico-macros/Cargo.toml",
         "crates/calico-elf/Cargo.toml",
         "crates/calico-rpc/Cargo.toml",
+        "crates/calico-runner/Cargo.toml",
         // "examples/stm32f401re/Cargo.toml"
     ]
 }

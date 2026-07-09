@@ -2,6 +2,7 @@ use std::{path::PathBuf, process::exit};
 
 use bmputil::{BmpParams, bmp::BmpMatcher, serial::interface::ProbeInterface};
 use calico::elf::TestElfInfo;
+use calico_runner::probe::{DebugProbe, Probe};
 use clap::Args;
 use color_eyre::Result;
 use std::str::FromStr;
@@ -41,7 +42,7 @@ pub(crate) async fn execute(args: &RunArgs) -> Result<()> {
     // ELFs built for Calcio contain a .info section called `calico` that
     // contains test metadata used by the runner, but it discarded when
     // flashed the the target with a debug probe.
-    //
+    //s
     // This allows metadata to accompany the ELF without needed to embed
     // the entire test metadata into the flashed binary, avoiding using
     // precious bytes on the target's flash memory.
@@ -54,8 +55,20 @@ pub(crate) async fn execute(args: &RunArgs) -> Result<()> {
     // ====================
     // Flash the binary to the target.
 
+    tracing::info!("Scanning for probe...");
+    let probe: Probe = Probe::new_probe_rs();
+    if !probe.has_probe() {
+        tracing::error!("No probe found!");
+    } else {
+        tracing::info!("Probe found!");
+    }
+
+    tracing::info!("Flashing...");
+    probe.flash(&args.path);
+    tracing::info!("Flashing complete!");
+
     // Try and identify all the probes on the system that are allowed by the invocation
-    let matcher = BmpMatcher::from_params(args);
+    /*let matcher = BmpMatcher::from_params(args);
     let mut results = matcher.find_matching_probes();
     let device: bmputil::bmp::BmpDevice = results.pop_single("run").map_err(|_| exit(1))?;
 
@@ -94,7 +107,7 @@ pub(crate) async fn execute(args: &RunArgs) -> Result<()> {
 
     // Scan for connected targets.
     gdb.monitor(Some(vec!["swd_scan".to_string()]))
-        .expect("successful swd_scan");
+        .expect("successful swd_scan");*/
 
     Ok(())
 }

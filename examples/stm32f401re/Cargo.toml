@@ -6,6 +6,7 @@ edition = "2024"
 [[bin]]
 name = "stm32f401re"
 test = false         # We're not using Rust unit testing.
+bench = false        # To make `cargo check --all-targets` work.
 
 [[test]]
 name = "examples"

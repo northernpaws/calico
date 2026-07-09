@@ -8,6 +8,26 @@ pub mod test;
 #[cfg(feature = "tracing")]
 pub mod tracing;
 
+/// Exports ELF symbols used by the Calico test runner.
+///
+/// This also contains the implicit entrypoints used to
+/// set up and start the test harness.
+#[doc(hidden)]
+pub mod export;
+
+/// Defines a default panic-handler.
+#[cfg(feature = "panic-handler")]
+#[panic_handler]
+fn panic(info: &core::panic::PanicInfo) -> ! {
+    loop {}
+    // TODO:
+    // error!("====================== PANIC ======================");
+
+    // error!("{}", info);
+
+    // semihosting::process::abort()
+}
+
 /// Called from a test to initialize the framework.
 pub fn init() {}
 

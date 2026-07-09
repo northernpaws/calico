@@ -7,10 +7,10 @@
 # Redirect/rename a function here, so that we can make sure
 # the user has added the linker script to the RUSTFLAGS.
 
-EXTERN (__embedded_test_start);
-PROVIDE(embedded_test_linker_file_not_added_to_rustflags = __embedded_test_start);
+EXTERN (__calico_start);
+PROVIDE(calico_linker_file_not_added_to_rustflags = __calico_start);
 
-PROVIDE(_embedded_test_setup = __embedded_test_default_setup);
+PROVIDE(_calico_setup = __calico_default_setup);
 
 # Define a new INFO section that holds to test metadata, and provides
 # the test symbols from being optimized out by the linker.

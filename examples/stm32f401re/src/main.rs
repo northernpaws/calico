@@ -14,32 +14,32 @@ async fn main(_spawner: Spawner) {
     info!("Calico HITL STM32F401RE Embassy Test");
     info!("==============================================");
 
-    // Initialize the HITL framework.
-    calico::init();
+    // // Initialize the HITL framework.
+    // calico::init();
 
-    // Waits for a signal from the host, and
-    // then starts running the test suites.
-    calico::start().await;
+    // // Waits for a signal from the host, and
+    // // then starts running the test suites.
+    // calico::start().await;
 
-    test_1();
+    // test_1();
 }
 
-/// This is a single functional test.
-#[calico::test(name = "test1234")]
-fn test_1() {}
+// /// This is a single functional test.
+// #[calico::test(name = "test1234")]
+// fn test_1() {}
 
-/// This is an example of a test suite.
-#[calico::tests]
-mod example_tests {
-    #[init]
-    fn init() {}
+// /// This is an example of a test suite.
+// #[calico::tests]
+// mod example_tests {
+//     #[init]
+//     fn init() {}
 
-    #[test]
-    fn test1() {}
+//     #[test]
+//     fn test1() {}
 
-    #[test]
-    fn test2() {}
+//     #[test]
+//     fn test2() {}
 
-    #[test]
-    fn test3() {}
-}
+//     #[test]
+//     fn test3() {}
+// }
