@@ -1,6 +1,13 @@
 use syn::{Attribute, Meta};
 
+/// Macro for running setup routines
+/// when the test binary first starts.
+pub(crate) mod setup;
+
+/// Macro for single tests.
 pub(crate) mod test;
+
+/// Macro for test suites.
 pub(crate) mod tests;
 
 // Helper function to pull the string out of #[doc = "..."]

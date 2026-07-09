@@ -31,6 +31,16 @@ fn ensure_linker_file_was_added_to_rustflags() -> ! {
 /// The entrypoint for the test harness.
 #[unsafe(no_mangle)]
 unsafe extern "C" fn __calico_start() -> ! {
+    // Invoke the user provided setup function if it
+    // exists, or run a default (empty) setup function.
+    unsafe extern "Rust" {
+        fn _calico_setup();
+    }
+
+    unsafe { _calico_setup() }
+
+    // TODO: setup and run interactions with host/runner
+
     loop {}
 }
 

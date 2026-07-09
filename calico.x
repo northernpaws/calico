@@ -1,8 +1,10 @@
 # This linker script allows Calico to inject custom test
 # info into the ELF file via Rust's link-section macros.
 
-# The EMBEDDED_TEST_VERSION symbol is needed by probe-rs to determine whether a binary contains embedded tests or not
-# Afterwards it reads the testcases from the .embedded_test section
+# The CALICO_VERSION symbol is needed by probe-rs to determine
+# whether a binary contains embedded tests or not.
+#
+# Afterwards it reads the testcases from the .calico section.
 
 # Redirect/rename a function here, so that we can make sure
 # the user has added the linker script to the RUSTFLAGS.
