@@ -1,11 +1,15 @@
 {
+    // Fixes errors from cargo trying to check embeded code against
+    // desktop targets and causing errors. Such as, claiming there's
+    // duplicate panic_impl functions conflicting with the std library.
+    "rust-analyzer.check.allTargets": false,
     "rust-analyzer.linkedProjects": [
         "Cargo.toml",
-        "crates/calico-cli/Cargo.toml",
-        "crates/calico-macros/Cargo.toml",
-        "crates/calico-elf/Cargo.toml",
-        "crates/calico-rpc/Cargo.toml",
-        "crates/calico-runner/Cargo.toml",
+        // "crates/calico-cli/Cargo.toml",
+        // "crates/calico-macros/Cargo.toml",
+        // "crates/calico-elf/Cargo.toml",
+        // "crates/calico-rpc/Cargo.toml",
+        // "crates/calico-runner/Cargo.toml",
         // "examples/stm32f401re/Cargo.toml"
     ]
 }
